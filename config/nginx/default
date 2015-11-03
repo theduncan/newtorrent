@@ -1,0 +1,40 @@
+server {
+	listen 80;
+
+	root /usr/share/nginx/html/rutorrent;
+	index index.html index.php;
+
+	server_name "docktorrent";
+
+	# Only localhost and networks passed by `-e AUTH_OFF` are allowed to access
+	# resources unauthenticated.
+
+        access_log /rtorrent/log/nginx.access.log;
+        error_log /rtorrent/log/nginx.error.log;
+
+	satisfy any;
+	allow 127.0.0.1;
+	deny all;
+	auth_basic "Login Required";
+	auth_basic_user_file /usr/share/nginx/html/.htpasswd;
+
+	location /RPC2 {
+		include scgi_params;
+		scgi_send_timeout 10s;
+		scgi_read_timeout 10s;
+		scgi_pass  unix:/tmp/rpc.socket;
+	}
+
+	location / {
+		try_files $uri $uri/ /index.html;
+	}
+
+	#location ~ \.php$ {
+	#	fastcgi_split_path_info ^(.+\.php)(/.+)$;
+	#	# NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+	#
+	#	fastcgi_pass unix:/var/run/php5-fpm.sock;
+	#	fastcgi_index index.php;
+	#	include fastcgi.conf;
+	#}
+}
