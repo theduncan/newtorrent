@@ -5,7 +5,7 @@ MAINTAINER duncan <duncan@aecbn.net>
 ENV VER_LIBTORRENT 0.13.4
 ENV VER_RTORRENT 0.9.4
 
-RUN /build
+RUN mkdir -p /build
 WORKDIR /build
 
 RUN build_deps="automake build-essential ca-certificates libc-ares-dev libcppunit-dev libtool"; \
